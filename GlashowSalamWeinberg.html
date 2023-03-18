@@ -36,6 +36,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .m { color: var(--jp-mirror-editor-number-color) } /* Literal.Number */
 .highlight .s { color: var(--jp-mirror-editor-string-color) } /* Literal.String */
 .highlight .ow { color: var(--jp-mirror-editor-operator-color); font-weight: bold } /* Operator.Word */
+.highlight .pm { color: var(--jp-mirror-editor-punctuation-color) } /* Punctuation.Marker */
 .highlight .w { color: var(--jp-mirror-editor-variable-color) } /* Text.Whitespace */
 .highlight .mb { color: var(--jp-mirror-editor-number-color) } /* Literal.Number.Bin */
 .highlight .mf { color: var(--jp-mirror-editor-number-color) } /* Literal.Number.Float */
@@ -14464,10 +14465,6 @@ a.anchor-link {
   display: none;
 }
 
-.highlight  {
-  margin: 0.4em;
-}
-
 /* Input area styling */
 .jp-InputArea {
   overflow: hidden;
@@ -14477,9 +14474,26 @@ a.anchor-link {
   overflow: hidden;
 }
 
-.CodeMirror pre {
+.CodeMirror.cm-s-jupyter .highlight pre {
+/* weird, but --jp-code-padding defined to be 5px but 4px horizontal padding is hardcoded for pre.CodeMirror-line */
+  padding: var(--jp-code-padding) 4px;
   margin: 0;
-  padding: 0;
+
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+
+}
+
+.jp-OutputArea-output pre {
+  line-height: inherit;
+  font-family: inherit;
+}
+
+.jp-RenderedText pre {
+  color: var(--jp-content-font-color1);
+  font-size: var(--jp-code-font-size);
 }
 
 /* Using table instead of flexbox so that we can use break-inside property */
@@ -14523,6 +14537,10 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 /* Hiding the collapser by default */
 .jp-Collapser {
   display: none;
+}
+
+@page {
+    margin: 0.5in; /* Margin for each printed piece of paper */
 }
 
 @media print {
@@ -14613,7 +14631,7 @@ Note the absence, in this model, of the field $\nu_R$.</p>
     &amp; + \overline{d}_R i \gamma^\mu ( \partial_\mu + i g_1 y^d_R B_\mu  ) d_R \nonumber \\
     &amp; - \frac{1}{4} \mathbf{W}_{\mu\nu} \cdot \mathbf{W}^{\mu\nu}\nonumber\\
     &amp; - \frac{1}{4} B_{\mu\nu} B^{\mu\nu},
-\end{align}<p>which explicitly treats left-handed and right-handed fields differently. The $y$ symbols, related to the constants $Y = 2 y$ called <em>hypercharges</em>, are chosen to obtain agreement with observations. We use $y$ instead of $Y / 2$, as is the usual convention, to make the expressions a bit tidier. The
+\end{align}<p>which explicitly treats left-handed and right-handed fields differently; that is, the model explicitly violates parity invariance. The $y$ symbols, related to the constants $Y = 2 y$ called <em>hypercharges</em>, are chosen to obtain agreement with observations. We use $y$ instead of $Y / 2$, as is the usual convention, to make the expressions a bit tidier. The
 other symbols are:
 \begin{align*}
 \mathbf{1} &amp; \textrm{ a $2 \times 2$ unit matrix}, \\
@@ -14651,7 +14669,7 @@ d_R \rightarrow U d_R, \\
 B_\mu &amp; \rightarrow U B_\mu U^{-1} - \frac{1}{i  g_1} (\partial_\mu U) U^{-1}.
 \end{align*}</p>
 <p>Notice the absence of mass terms such as $m \psi \psi$ and $M_B^2 B_\mu B^\mu$ in the Lagrangian. This is necessary because mass terms violate the imposed $SU(2) \otimes U(1)$ invariance.</p>
-<p>The model above was developed by Glashow in 1961. However, because it predicted zero mass for all bosonic fields (not just for the photon), it clearly did not accord with the absence of experimental evidence for a long-range weak nuclear force. But in 1964 a mechanism for introducing mass without violating gauge invariance was developed independently by Englert &amp; Brout, by Higgs, and by Guralnik, Hagen &amp; Kibble in a series of papers in that year. These papers were inspired by the work of the condensed matter theorist Phil Anderson. Much to the chagrin of the other theorists, the mechanism was referred to, by Steven Weinberg, as the Higgs mechanism and the name stuck. A more accurate name, though a bit of a mouthful, would be the <em>Anderson-Englert-Brout-Higgs-Guralnik-Hagen-Kibble</em> mechanism.</p>
+<p>The model above was developed by Glashow in 1961. However, because it predicted zero mass for all bosonic fields (not just for the photon), it clearly did not accord with the absence of experimental evidence for a long-range weak nuclear force. But in 1964 a mechanism for introducing mass without violating gauge invariance was developed independently by Englert &amp; Brout, by Higgs, and by Guralnik, Hagen &amp; Kibble in a series of papers in that year. These papers were inspired by the work of the condensed matter theorist Phil Anderson. Much to the chagrin of the other theorists, the mechanism was referred to, by Steven Weinberg, as the Higgs mechanism and the name stuck. A more accurate name, though a bit of a mouthful, would be the <strong>Anderson-Englert-Brout-Higgs-Guralnik-Hagen-Kibble</strong> mechanism.</p>
 <p>In 1967, Salam and Weinberg independently showed how the Higgs mechanism can be used to correct the mass problem of the Glashow model. In addition, Weinberg introduced gauge invariant interactions between the Higgs field and the fermion fields that induced mass terms for the latter. Thus was born the <strong>electroweak model</strong>.</p>
 <p>It is usually argued that <strong>local gauge</strong> invariance means that the phases of the quantum fields can be set to different values at different events in spacetime and that this makes sense because there is no reason why, for example, Andromedans, ten million years from now, should adopt the same phase convention as Earthlings do now. Personally, I find this argument unconvincing. There exist, after all, other symmetries with phases that remain constant over the whole of spacetime. For example, the replacements (see
 <a href="https://arxiv.org/pdf/hep-ph/0410370.pdf">https://arxiv.org/pdf/hep-ph/0410370.pdf</a>, p. 9)</p>
@@ -14676,31 +14694,32 @@ the other hand, since the right-handed electron field is an $SU(2)$ singlet $I_3
 Therefore, in order to satisfy the Gell-Mann Nishijima relation we must make the
 assignments $y^Q_L = 1/6$, $y^u_R = 2/3$, and $y^d_R = -1/3$. The hypercharge assignments are collected below.</p>
 <table>
-<thead><tr>
-<th style="text-align:left">Reduced Hypercharge</th>
-<th>Value</th>
+<thead>
+<tr>
+  <th style="text-align:left">Reduced Hypercharge</th>
+  <th>Value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left">$y^Q_L$</td>
-<td>$+1/6$</td>
+  <td style="text-align:left">$y^Q_L$</td>
+  <td>$+1/6$</td>
 </tr>
 <tr>
-<td style="text-align:left">$y^L_L$</td>
-<td>$-1/2$</td>
+  <td style="text-align:left">$y^L_L$</td>
+  <td>$-1/2$</td>
 </tr>
 <tr>
-<td style="text-align:left">$y^u_R$</td>
-<td>$+2/3$</td>
+  <td style="text-align:left">$y^u_R$</td>
+  <td>$+2/3$</td>
 </tr>
 <tr>
-<td style="text-align:left">$y^d_R$</td>
-<td>$-1/3$</td>
+  <td style="text-align:left">$y^d_R$</td>
+  <td>$-1/3$</td>
 </tr>
 <tr>
-<td style="text-align:left">$y^e_R$</td>
-<td>$-1$</td>
+  <td style="text-align:left">$y^e_R$</td>
+  <td>$-1$</td>
 </tr>
 </tbody>
 </table>
@@ -14736,7 +14755,7 @@ $$\frac{G_F}{\sqrt{2}} = \frac{g_2^2}{8 M_W^2}.$$</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># load symbolic algebra module</span>
@@ -14775,7 +14794,7 @@ $$\frac{G_F}{\sqrt{2}} = \frac{g_2^2}{8 M_W^2}.$$</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># make the following symbols non-commutative so that the order in which</span>
@@ -14833,11 +14852,9 @@ $$\frac{G_F}{\sqrt{2}} = \frac{g_2^2}{8 M_W^2}.$$</p>
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[3]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[2]:</div>
 
 
 
@@ -14857,7 +14874,7 @@ $\displaystyle \left( \nu_{L}, \  e_{L}, \  e_{R}, \  u_{L}, \  u_{R}, \  d_{L},
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">Wplus</span><span class="p">,</span> <span class="n">Wminus</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">A</span>
@@ -14874,11 +14891,9 @@ $\displaystyle \left( \nu_{L}, \  e_{L}, \  e_{R}, \  u_{L}, \  u_{R}, \  d_{L},
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[3]:</div>
 
 
 
@@ -14909,7 +14924,7 @@ $\displaystyle \left( W^{+}_{\mu}, \  W^{-}_{\mu}, \  Z_{\mu}, \  A_{\mu}\right)
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">g1</span><span class="p">,</span> <span class="n">g2</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">thetaW</span>  <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;g_1 g_2 q </span><span class="se">\\</span><span class="s1">theta_W&#39;</span><span class="p">)</span>
@@ -14929,11 +14944,9 @@ $\displaystyle \left( W^{+}_{\mu}, \  W^{-}_{\mu}, \  Z_{\mu}, \  A_{\mu}\right)
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
 
 
 
@@ -14953,7 +14966,7 @@ $\displaystyle \left( g_{1}, \  g_{2}, \  q, \  y^{L}_{L}, \  y^{e}_{R}, \  y^{Q
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">Qf</span><span class="p">,</span> <span class="n">Qu</span><span class="p">,</span> <span class="n">Qd</span><span class="p">,</span> <span class="n">Qe</span><span class="p">,</span> <span class="n">Qn</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;Q^f, Q^u, Q^d, Q^e, Q^</span><span class="se">\\</span><span class="s1">nu&#39;</span><span class="p">)</span>
@@ -14972,11 +14985,9 @@ $\displaystyle \left( g_{1}, \  g_{2}, \  q, \  y^{L}_{L}, \  y^{e}_{R}, \  y^{Q
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
 
 
 
@@ -15030,9 +15041,7 @@ $\displaystyle \left( q, \  Q^{f}, \  Q^{u}, \  Q^{d}, \  Q^{e}, \  Q^{\nu}, \  
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
     <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
 
@@ -15092,9 +15101,7 @@ $\displaystyle \left( \left[\begin{matrix}\overline{\nu}_L &amp; \overline{e}_L\
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
     <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[7]:</div>
 
@@ -15147,9 +15154,7 @@ $\displaystyle \left[\begin{matrix}\frac{W^{3}_{\mu}}{2} &amp; \frac{W^{1}_{\mu}
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
     <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[8]:</div>
 
@@ -15200,9 +15205,7 @@ $\displaystyle \left[\begin{matrix}\frac{W^{3}_{\mu}}{2} &amp; \frac{\sqrt{2} W^
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
     <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[9]:</div>
 
@@ -15261,9 +15264,7 @@ $\displaystyle \left[\begin{matrix}B_{\mu} &amp; 0\\0 &amp; B_{\mu}\end{matrix}\
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
     <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[10]:</div>
 
@@ -15315,9 +15316,7 @@ $\displaystyle \left( \left[\begin{matrix}B_{\mu} g_{1} y^{L}_{L} + \frac{W^{3}_
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
     <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[11]:</div>
 
@@ -15375,9 +15374,7 @@ $\displaystyle - B_{\mu} g_{1} y^{L}_{L} \overline{\nu}_L \gamma^{\mu} \nu_{L} -
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
     <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[12]:</div>
 
@@ -15452,9 +15449,7 @@ $\displaystyle - B_{\mu} g_{1} y^{d}_{R} \overline{d}_R \gamma^{\mu} d_{R} - B_{
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
     <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[13]:</div>
 
@@ -15476,7 +15471,7 @@ $\displaystyle \left[\begin{matrix}A_{\mu} \cos{\left(\theta_{W} \right)} - Z_{\
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">l</span> <span class="o">+</span> <span class="n">r</span>
@@ -15497,11 +15492,9 @@ $\displaystyle \left[\begin{matrix}A_{\mu} \cos{\left(\theta_{W} \right)} - Z_{\
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[15]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[14]:</div>
 
 
 
@@ -15523,7 +15516,7 @@ $\displaystyle - A_{\mu} g_{1} y^{L}_{L} \cos{\left(\theta_{W} \right)} \overlin
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>In the above expression there are interactions between the electromagnetic field $A_\mu$ and the neutrino current $\bar{\nu}_L \gamma^\mu \nu_L$. However, we have no evidence that such interactions exists. The simplest way to get rid of them is to set  $$-y^L_L \, g_1\cos\theta_W = \frac{g_2}{2}\sin\theta_W.$$</p>
+<p>In the above expression there are interactions between the electromagnetic field $A_\mu$ and the neutrino current $\bar{\nu}_L \gamma^\mu \nu_L$. However, we have no evidence that such interactions exists. Glashow noted that the simplest way to get rid of them is to set  $$-y^L_L \, g_1\cos\theta_W - \frac{g_2}{2}\sin\theta_W = 0.$$</p>
 
 </div>
 </div>
@@ -15533,7 +15526,7 @@ $\displaystyle - A_{\mu} g_{1} y^{L}_{L} \cos{\left(\theta_{W} \right)} \overlin
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[16]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="o">-</span><span class="n">YLL</span><span class="o">*</span><span class="n">g1</span><span class="o">*</span><span class="n">sm</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">thetaW</span><span class="p">),</span> <span class="n">g2</span><span class="o">*</span><span class="n">sm</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">thetaW</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
@@ -15551,11 +15544,9 @@ $\displaystyle - A_{\mu} g_{1} y^{L}_{L} \cos{\left(\theta_{W} \right)} \overlin
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[16]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[15]:</div>
 
 
 
@@ -15577,7 +15568,7 @@ $\displaystyle - A_{\mu} g_{1} y^{Q}_{L} \cos{\left(\theta_{W} \right)} \overlin
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>So far, so good. Now, if this theory has something to do with reality, we need to recover the known form of the electromagnetic interaction, which for electrons has the form $q  A_\mu (\bar{e}_L \gamma^\mu e_L + \bar{e}_R \gamma^\mu e_R )$, where $q$ is the magnitude of the electic charge of the electron. We can recover the correct form of the QED interactions
+<p>So far, so good; we've got rid of the non-existent interactions. Now, if this theory has something to do with reality, we need to recover the known form of the electromagnetic interaction, which for electrons has the form $q  A_\mu (\bar{e}_L \gamma^\mu e_L + \bar{e}_R \gamma^\mu e_R )$, where $q$ is the magnitude of the electic charge of the electron. We can recover the correct form of the QED interactions
 if we impose the conditions</p>
 \begin{align*}
     -y^e_R g_1 \cos\theta_W &amp; = g_2 \sin\theta_W = q,
@@ -15595,7 +15586,7 @@ if we impose the conditions</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[17]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[16]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">subs</span><span class="p">({</span><span class="o">-</span><span class="n">YeR</span><span class="o">*</span><span class="n">g1</span><span class="o">*</span><span class="n">sm</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">thetaW</span><span class="p">):</span> <span class="n">q</span><span class="p">,</span> <span class="n">g2</span><span class="o">*</span><span class="n">sm</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">thetaW</span><span class="p">):</span> <span class="n">q</span> <span class="p">})</span>
@@ -15616,11 +15607,9 @@ if we impose the conditions</p>
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[17]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[16]:</div>
 
 
 
@@ -15663,7 +15652,7 @@ $\displaystyle - A_{\mu} q y^{Q}_{L} \overline{d}_L \gamma^{\mu} d_{L} - A_{\mu}
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[18]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[17]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">Wplus</span><span class="p">)</span>
@@ -15683,11 +15672,9 @@ $\displaystyle - A_{\mu} q y^{Q}_{L} \overline{d}_L \gamma^{\mu} d_{L} - A_{\mu}
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[18]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[17]:</div>
 
 
 
@@ -15718,7 +15705,7 @@ $\displaystyle - \frac{\sqrt{2} q \left(\overline{\nu}_L \gamma^{\mu} e_{L} + \o
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[19]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[18]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">Wminus</span><span class="p">)</span>
@@ -15738,11 +15725,9 @@ $\displaystyle - \frac{\sqrt{2} q \left(\overline{\nu}_L \gamma^{\mu} e_{L} + \o
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[19]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[18]:</div>
 
 
 
@@ -15774,7 +15759,7 @@ $\displaystyle - \frac{\sqrt{2} q \left(\overline{d}_L \gamma^{\mu} u_{L} + \ove
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[20]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[19]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">N</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">D</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;N, E, U, D&#39;</span><span class="p">)</span>
@@ -15809,11 +15794,9 @@ $\displaystyle - \frac{\sqrt{2} q \left(\overline{d}_L \gamma^{\mu} u_{L} + \ove
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[20]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[19]:</div>
 
 
 
@@ -15845,7 +15828,7 @@ $\displaystyle - q y^{d}_{R} \overline{d}_R \gamma^{\mu} d_{R} - q y^{u}_{R} \ov
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[21]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[20]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">Acoeff</span> <span class="o">=</span> <span class="n">Acoeff</span><span class="o">.</span><span class="n">subs</span><span class="p">({</span><span class="o">-</span><span class="n">q</span><span class="o">*</span><span class="n">YQL</span> <span class="o">+</span> <span class="n">q</span><span class="o">/</span><span class="mi">2</span><span class="p">:</span> <span class="o">-</span><span class="n">q</span><span class="o">*</span><span class="n">Qd</span><span class="p">,</span>
@@ -15866,11 +15849,9 @@ $\displaystyle - q y^{d}_{R} \overline{d}_R \gamma^{\mu} d_{R} - q y^{u}_{R} \ov
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[21]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[20]:</div>
 
 
 
@@ -15902,7 +15883,7 @@ $\displaystyle - Q^{d} q \overline{d}_L \gamma^{\mu} d_{L} - Q^{d} q \overline{d
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[22]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[21]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># left electron current</span>
@@ -15925,11 +15906,9 @@ $\displaystyle - Q^{d} q \overline{d}_L \gamma^{\mu} d_{L} - Q^{d} q \overline{d
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[22]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[21]:</div>
 
 
 
@@ -15961,7 +15940,7 @@ $\displaystyle - Q^{d} q \overline{d}_L \gamma^{\mu} d_{L} - Q^{d} q \overline{d
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[23]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[22]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">Acoeff</span> <span class="o">=</span> <span class="n">Acoeff</span><span class="o">.</span>\
@@ -15985,11 +15964,9 @@ $\displaystyle - Q^{d} q \overline{d}_L \gamma^{\mu} d_{L} - Q^{d} q \overline{d
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[23]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[22]:</div>
 
 
 
@@ -16015,7 +15992,7 @@ $\displaystyle - q \left(Q^{d} \left(\overline{d}_L \gamma^{\mu} d_{L} + \overli
 \begin{align*}
 J^\mu_\textrm{em} &amp; = - q \sum_{f = u, d, e} Q^f \overline{\psi}^f \gamma^\mu \psi^f,
 \end{align*}
-where $\psi = \psi_L + \psi_R$, noting that $P_{L,R} \gamma^\mu P_{L, R} = 0$, where $Q^f$ is the electic charge in units of the proton charge for the quantum field of flavor $f$.</p>
+where $\psi = \psi_L + \psi_R$, noting that $P_{L,R} \gamma^\mu P_{L, R} = 0$, where $Q^f$ is the electic charge in units of the proton charge for the quantum field of flavor $f$. Notice, also, as dictated by experiment, the electromagnetic interactions do not violate parity invariance: the coupling to the left-handed and right-handed fields are the same.</p>
 
 </div>
 </div>
@@ -16038,7 +16015,7 @@ Unfortunately, collect does not work with noncommutative symbols. So, again, use
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[24]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[48]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
@@ -16073,11 +16050,9 @@ Unfortunately, collect does not work with noncommutative symbols. So, again, use
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[24]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[48]:</div>
 
 
 
@@ -16099,17 +16074,112 @@ $\displaystyle q y^{d}_{R} \tan{\left(\theta_{W} \right)} \overline{d}_R \gamma^
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>We see that we can extract a common factor of $q \tan(\theta_W)$. Let's try to do this.</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[51]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">T</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>
+<span class="n">Zcoeff</span> <span class="o">=</span> <span class="n">Zcoeff</span><span class="o">.</span><span class="n">subs</span><span class="p">({</span><span class="mi">1</span><span class="o">/</span><span class="n">sm</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">thetaW</span><span class="p">):</span> <span class="n">sm</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">thetaW</span><span class="p">)</span><span class="o">/</span><span class="n">T</span><span class="p">})</span>
+<span class="n">Zcoeff</span> <span class="o">=</span> <span class="n">Zcoeff</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">sm</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">thetaW</span><span class="p">))</span>
+<span class="n">Zcoeff</span> <span class="o">=</span> <span class="n">Zcoeff</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+<span class="n">Zcoeff</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[51]:</div>
+
+
+
+
+<div class="jp-RenderedLatex jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/latex">
+$\displaystyle q \tan{\left(\theta_{W} \right)} \left(y^{d}_{R} \overline{d}_R \gamma^{\mu} d_{R} + y^{e}_{R} \overline{e}_R \gamma^{\mu} e_{R} + y^{u}_{R} \overline{u}_R \gamma^{\mu} u_{R} + \left(y^{L}_{L} - \frac{1}{2 T}\right) \overline{\nu}_L \gamma^{\mu} \nu_{L} + \left(y^{L}_{L} + \frac{1}{2 T}\right) \overline{e}_L \gamma^{\mu} e_{L} + \left(y^{Q}_{L} - \frac{1}{2 T}\right) \overline{u}_L \gamma^{\mu} u_{L} + \left(y^{Q}_{L} + \frac{1}{2 T}\right) \overline{d}_L \gamma^{\mu} d_{L}\right)$
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[52]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">Zcoeff</span> <span class="o">=</span> <span class="n">Zcoeff</span><span class="o">.</span><span class="n">subs</span><span class="p">({</span><span class="n">T</span><span class="p">:</span> <span class="n">sm</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">thetaW</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">})</span>
+<span class="n">Zcoeff</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[52]:</div>
+
+
+
+
+<div class="jp-RenderedLatex jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/latex">
+$\displaystyle q \tan{\left(\theta_{W} \right)} \left(y^{d}_{R} \overline{d}_R \gamma^{\mu} d_{R} + y^{e}_{R} \overline{e}_R \gamma^{\mu} e_{R} + y^{u}_{R} \overline{u}_R \gamma^{\mu} u_{R} + \left(y^{L}_{L} - \frac{1}{2 \tan^{2}{\left(\theta_{W} \right)}}\right) \overline{\nu}_L \gamma^{\mu} \nu_{L} + \left(y^{L}_{L} + \frac{1}{2 \tan^{2}{\left(\theta_{W} \right)}}\right) \overline{e}_L \gamma^{\mu} e_{L} + \left(y^{Q}_{L} - \frac{1}{2 \tan^{2}{\left(\theta_{W} \right)}}\right) \overline{u}_L \gamma^{\mu} u_{L} + \left(y^{Q}_{L} + \frac{1}{2 \tan^{2}{\left(\theta_{W} \right)}}\right) \overline{d}_L \gamma^{\mu} d_{L}\right)$
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h3 id="Weak-neutral-currents">Weak neutral currents<a class="anchor-link" href="#Weak-neutral-currents">&#182;</a></h3><p>The weak neutral current $J^\mu_\textrm{nc}$ can be written as
 \begin{align*}
-J^\mu_\textrm{nc} &amp; = q \tan(\theta_W) \sum_{f=u, d, e} Q^f \overline{f}_R \gamma^\mu f_R \\
-&amp; + q \tan(\theta_W)\sum_{f=u, d} \left(y^Q_L  - \frac{I^f_3}{\tan^2(\theta_W)} \right) \overline{f}_L \gamma^\mu f_L \\
-&amp; + q \tan(\theta_W) \sum_{f=\nu, e} \left(y^L_L  - \frac{I^f_3}{\tan^2(\theta_W)} \right) \overline{f}_L \gamma^\mu f_L
+J^\mu_\textrm{nc} &amp; = q \tan(\theta_W) \sum_{f=d, u, e} y^f_R \overline{f}_R \gamma^\mu f_R \\
+&amp; + q \tan(\theta_W)\sum_{f=d, u, e, \nu} \left(y^f_L  - \frac{I^f_3}{2 \tan^2(\theta_W)} \right) \overline{f}_L \gamma^\mu f_L, 
 \end{align*}</p>
+<p>which predicts the partial violation of parity by the weak neutral currents in a specific way.</p>
 <p>The more traditional way of writing the weak neutral current $J^\mu_\textrm{nc}$ is
 \begin{align*}
 J^\mu_\textrm{nc} &amp; = \frac{2q}{\sin(2\theta_W)} \left( 
-\sum_{f = d, e, u} Q^f \sin^2\theta_W \overline{f}_R \gamma^\mu f_R +
-\sum_{f = d, e, u, \nu} (-I^f_3 + Q^f \sin^2\theta_W) \, \overline{f}_L \gamma^\mu f_L   \right).
+\sum_{f = d, u, e} Q^f \sin^2\theta_W \overline{f}_R \gamma^\mu f_R +
+\sum_{f = d, u, e, \nu} (-I^f_3 + Q^f \sin^2\theta_W) \, \overline{f}_L \gamma^\mu f_L   \right).
 \end{align*}</p>
 
 </div>
@@ -16142,7 +16212,7 @@ J^\mu_\textrm{nc} &amp; = \frac{2q}{\sin(2\theta_W)} \left(
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[25]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[53]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">Acoeff</span><span class="o">*</span><span class="n">A</span>
@@ -16159,11 +16229,9 @@ J^\mu_\textrm{nc} &amp; = \frac{2q}{\sin(2\theta_W)} \left(
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[25]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[53]:</div>
 
 
 
@@ -16194,7 +16262,7 @@ $\displaystyle - A_{\mu} q \left(Q^{d} \left(\overline{d}_L \gamma^{\mu} d_{L} +
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[26]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[54]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">Wpm</span> <span class="o">=</span> <span class="n">Wpluscoeff</span><span class="o">*</span><span class="n">Wplus</span> <span class="o">+</span> <span class="n">Wminuscoeff</span><span class="o">*</span><span class="n">Wminus</span>
@@ -16213,11 +16281,9 @@ $\displaystyle - A_{\mu} q \left(Q^{d} \left(\overline{d}_L \gamma^{\mu} d_{L} +
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[26]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[54]:</div>
 
 
 
@@ -16248,7 +16314,7 @@ $\displaystyle - \frac{\sqrt{2} q \left(W^{+}_{\mu} \left(\overline{\nu}_L \gamm
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[27]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[55]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">Zcoeff</span><span class="o">*</span><span class="n">Z</span>
@@ -16265,17 +16331,15 @@ $\displaystyle - \frac{\sqrt{2} q \left(W^{+}_{\mu} \left(\overline{\nu}_L \gamm
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[27]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[55]:</div>
 
 
 
 
 <div class="jp-RenderedLatex jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/latex">
-$\displaystyle Z_{\mu} \left(q y^{d}_{R} \tan{\left(\theta_{W} \right)} \overline{d}_R \gamma^{\mu} d_{R} + q y^{e}_{R} \tan{\left(\theta_{W} \right)} \overline{e}_R \gamma^{\mu} e_{R} + q y^{u}_{R} \tan{\left(\theta_{W} \right)} \overline{u}_R \gamma^{\mu} u_{R} + q \left(y^{L}_{L} \tan{\left(\theta_{W} \right)} - \frac{1}{2 \tan{\left(\theta_{W} \right)}}\right) \overline{\nu}_L \gamma^{\mu} \nu_{L} + q \left(y^{L}_{L} \tan{\left(\theta_{W} \right)} + \frac{1}{2 \tan{\left(\theta_{W} \right)}}\right) \overline{e}_L \gamma^{\mu} e_{L} + q \left(y^{Q}_{L} \tan{\left(\theta_{W} \right)} - \frac{1}{2 \tan{\left(\theta_{W} \right)}}\right) \overline{u}_L \gamma^{\mu} u_{L} + q \left(y^{Q}_{L} \tan{\left(\theta_{W} \right)} + \frac{1}{2 \tan{\left(\theta_{W} \right)}}\right) \overline{d}_L \gamma^{\mu} d_{L}\right)$
+$\displaystyle Z_{\mu} q \tan{\left(\theta_{W} \right)} \left(y^{d}_{R} \overline{d}_R \gamma^{\mu} d_{R} + y^{e}_{R} \overline{e}_R \gamma^{\mu} e_{R} + y^{u}_{R} \overline{u}_R \gamma^{\mu} u_{R} + \left(y^{L}_{L} - \frac{1}{2 \tan^{2}{\left(\theta_{W} \right)}}\right) \overline{\nu}_L \gamma^{\mu} \nu_{L} + \left(y^{L}_{L} + \frac{1}{2 \tan^{2}{\left(\theta_{W} \right)}}\right) \overline{e}_L \gamma^{\mu} e_{L} + \left(y^{Q}_{L} - \frac{1}{2 \tan^{2}{\left(\theta_{W} \right)}}\right) \overline{u}_L \gamma^{\mu} u_{L} + \left(y^{Q}_{L} + \frac{1}{2 \tan^{2}{\left(\theta_{W} \right)}}\right) \overline{d}_L \gamma^{\mu} d_{L}\right)$
 </div>
 
 </div>
@@ -16291,7 +16355,7 @@ $\displaystyle Z_{\mu} \left(q y^{d}_{R} \tan{\left(\theta_{W} \right)} \overlin
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>The GSW model incorporates quantum electrodynamics (QED), predicts weak charged and neutral current interactions and incorporates the observation that neither the electromagnetic nor the weak neutral currrent interactions change flavor, while the weak charged current interactions always do. And, of course, the model incorporates the maximal parity violation of the weak interactions. But, at this stage, all particles are massless.</p>
+<p>The GSW model incorporates a parity-conserving quantum electrodynamics (QED), predicts weak charged currents that maximally violate parity, weak neutral current interactions that partially violate parity, and incorporates the observation that neither the electromagnetic nor the weak neutral currrent interactions change flavor, while the weak charged current interactions always do. This is truly an amazing set of predictions! But, at this stage, all particles are massless.</p>
 
 </div>
 </div>
@@ -16354,7 +16418,7 @@ $$H_c \equiv i \tau_2 H = \frac{1}{\sqrt{2}}\begin{pmatrix} v + h \\ 0 \end{pmat
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[34]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[56]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">v</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;v&#39;</span><span class="p">)</span>
@@ -16376,11 +16440,9 @@ $$H_c \equiv i \tau_2 H = \frac{1}{\sqrt{2}}\begin{pmatrix} v + h \\ 0 \end{pmat
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[34]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[56]:</div>
 
 
 
@@ -16417,7 +16479,7 @@ $\displaystyle \left( \left[\begin{matrix}B_{\mu} g_{1} y^{\phi}_{L} + \frac{W^{
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[36]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[57]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span>    <span class="o">=</span> <span class="n">F</span><span class="o">*</span><span class="n">H</span>
@@ -16440,11 +16502,9 @@ $\displaystyle \left( \left[\begin{matrix}B_{\mu} g_{1} y^{\phi}_{L} + \frac{W^{
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[36]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[57]:</div>
 
 
 
@@ -16476,13 +16536,14 @@ $\displaystyle \frac{W^{+}_{\mu} W^{-\mu} g_{2}^{2} \left(h + v\right)^{2}}{4} +
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[37]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[58]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">g1</span><span class="o">*</span><span class="n">B</span> <span class="o">-</span> <span class="n">g2</span><span class="o">*</span><span class="n">W3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">Z</span> <span class="o">*</span> <span class="n">sm</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">g1</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">g2</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">f</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">expand</span><span class="p">()</span>
 <span class="n">f</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">subs</span><span class="p">({</span><span class="n">Z</span><span class="o">**</span><span class="mi">2</span><span class="p">:</span> <span class="n">Z</span><span class="o">*</span><span class="n">Zup</span><span class="p">})</span>
 <span class="n">f</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">Z</span><span class="o">*</span><span class="n">Zup</span><span class="o">*</span><span class="n">v</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">Z</span><span class="o">*</span><span class="n">Zup</span><span class="o">*</span><span class="n">h</span><span class="o">*</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">Z</span><span class="o">*</span><span class="n">Zup</span><span class="o">*</span><span class="n">h</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">simplify</span><span class="p">()</span>
 <span class="n">f</span>
 </pre></div>
 
@@ -16497,17 +16558,15 @@ $\displaystyle \frac{W^{+}_{\mu} W^{-\mu} g_{2}^{2} \left(h + v\right)^{2}}{4} +
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[37]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[58]:</div>
 
 
 
 
 <div class="jp-RenderedLatex jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/latex">
-$\displaystyle \frac{W^{+}_{\mu} W^{-\mu} g_{2}^{2} h^{2}}{4} + \frac{W^{+}_{\mu} W^{-\mu} g_{2}^{2} h v}{2} + \frac{W^{+}_{\mu} W^{-\mu} g_{2}^{2} v^{2}}{4} + Z^{\mu} Z_{\mu} h^{2} \left(\frac{g_{1}^{2}}{8} + \frac{g_{2}^{2}}{8}\right) + Z^{\mu} Z_{\mu} h v \left(\frac{g_{1}^{2}}{4} + \frac{g_{2}^{2}}{4}\right) + Z^{\mu} Z_{\mu} v^{2} \left(\frac{g_{1}^{2}}{8} + \frac{g_{2}^{2}}{8}\right)$
+$\displaystyle \frac{W^{+}_{\mu} W^{-\mu} g_{2}^{2} h^{2}}{4} + \frac{W^{+}_{\mu} W^{-\mu} g_{2}^{2} h v}{2} + \frac{W^{+}_{\mu} W^{-\mu} g_{2}^{2} v^{2}}{4} + \frac{Z^{\mu} Z_{\mu} h^{2} \left(g_{1}^{2} + g_{2}^{2}\right)}{8} + \frac{Z^{\mu} Z_{\mu} h v \left(g_{1}^{2} + g_{2}^{2}\right)}{4} + \frac{Z^{\mu} Z_{\mu} v^{2} \left(g_{1}^{2} + g_{2}^{2}\right)}{8}$
 </div>
 
 </div>
@@ -16533,7 +16592,89 @@ $\displaystyle \frac{W^{+}_{\mu} W^{-\mu} g_{2}^{2} h^{2}}{4} + \frac{W^{+}_{\mu
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[38]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[59]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mz</span><span class="p">,</span> <span class="n">mw</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;m_Z, m_W&quot;</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">subs</span><span class="p">({</span><span class="n">g1</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">g2</span><span class="o">**</span><span class="mi">2</span><span class="p">:</span> <span class="mi">4</span><span class="o">*</span><span class="n">mz</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">v</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> 
+            <span class="n">g2</span><span class="o">**</span><span class="mi">2</span><span class="p">:</span> <span class="mi">4</span><span class="o">*</span><span class="n">mw</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">v</span><span class="o">**</span><span class="mi">2</span><span class="p">})</span>
+<span class="n">f</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[59]:</div>
+
+
+
+
+<div class="jp-RenderedLatex jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/latex">
+$\displaystyle \frac{W^{+}_{\mu} W^{-\mu} h^{2} m_{W}^{2}}{v^{2}} + \frac{2 W^{+}_{\mu} W^{-\mu} h m_{W}^{2}}{v} + W^{+}_{\mu} W^{-\mu} m_{W}^{2} + \frac{Z^{\mu} Z_{\mu} h^{2} m_{Z}^{2}}{2 v^{2}} + \frac{Z^{\mu} Z_{\mu} h m_{Z}^{2}}{v} + \frac{Z^{\mu} Z_{\mu} m_{Z}^{2}}{2}$
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[60]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">collect</span><span class="p">([</span><span class="n">h</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">v</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">h</span><span class="o">/</span><span class="n">v</span><span class="p">])</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">Wplus</span><span class="o">*</span><span class="n">Wminus</span><span class="o">*</span><span class="n">mw</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="n">Z</span><span class="o">*</span><span class="n">Zup</span><span class="o">*</span><span class="n">mz</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">f</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[60]:</div>
+
+
+
+
+<div class="jp-RenderedLatex jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/latex">
+$\displaystyle W^{+}_{\mu} W^{-\mu} m_{W}^{2} + \frac{Z^{\mu} Z_{\mu} m_{Z}^{2}}{2} + \frac{h^{2} \left(W^{+}_{\mu} W^{-\mu} m_{W}^{2} + \frac{Z^{\mu} Z_{\mu} m_{Z}^{2}}{2}\right)}{v^{2}} + \frac{h \left(2 W^{+}_{\mu} W^{-\mu} m_{W}^{2} + Z^{\mu} Z_{\mu} m_{Z}^{2}\right)}{v}$
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[61]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">sw2</span> <span class="o">=</span> <span class="mf">0.2397</span>             <span class="c1"># sin^2(theta_W)</span>
@@ -16553,9 +16694,7 @@ $\displaystyle \frac{W^{+}_{\mu} W^{-\mu} g_{2}^{2} h^{2}}{4} + \frac{W^{+}_{\mu
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
 <div class="jp-OutputArea-child">
-
     
     <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 
@@ -16575,7 +16714,7 @@ $\displaystyle \frac{W^{+}_{\mu} W^{-\mu} g_{2}^{2} h^{2}}{4} + \frac{W^{+}_{\mu
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[39]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[62]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">MW</span>  <span class="o">=</span> <span class="mf">80.385</span> <span class="c1"># GeV</span>
@@ -16595,9 +16734,7 @@ $\displaystyle \frac{W^{+}_{\mu} W^{-\mu} g_{2}^{2} h^{2}}{4} + \frac{W^{+}_{\mu
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
 <div class="jp-OutputArea-child">
-
     
     <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 
@@ -16632,7 +16769,7 @@ $V(H) = \mu^2 H^\dagger H - \lambda (H^\dagger H)^2$, which when expanded become
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[40]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[63]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">mu</span><span class="p">,</span> <span class="n">lm</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;\mu, \lambda&#39;</span><span class="p">)</span>
@@ -16652,11 +16789,9 @@ $V(H) = \mu^2 H^\dagger H - \lambda (H^\dagger H)^2$, which when expanded become
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[40]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[63]:</div>
 
 
 
@@ -16689,7 +16824,7 @@ $\mu^2 = v^2 \lambda$.</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[41]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[64]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">V</span> <span class="o">=</span> <span class="n">V</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">mu</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">v</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">lm</span><span class="p">)</span>
@@ -16707,11 +16842,9 @@ $\mu^2 = v^2 \lambda$.</p>
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[41]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[64]:</div>
 
 
 
@@ -16738,7 +16871,7 @@ $\displaystyle - \frac{\lambda h^{4}}{4} - \lambda h^{3} v - \lambda h^{2} v^{2}
 \lambda &amp; = \frac{1}{2}\left(\frac{m_H}{v} \right)^2 = 0.129, \\
 \mu &amp; = v \sqrt{\lambda} = 88.4\,\text{GeV}.
 \end{align*}
-Note also, the intriguing fact that $v \, / \sqrt{2} = 173.9\,\text{GeV}$ matches the measured top quark mass of $m_t = 172.8 \pm 0.3\,\text{GeV}$ to within about 0.6%.
+Note, again, the intriguing fact that $v \, / \sqrt{2} = 173.9\,\text{GeV}$ matches the measured top quark mass of $m_t = 172.8 \pm 0.3\,\text{GeV}$ to within about 0.6%.
 Nature seems to be telling us something!</p>
 
 </div>
@@ -16780,7 +16913,7 @@ $$m \overline{\psi} \psi$$<p>and $\textrm{dim}(m) = [M]$, it follows that a ferm
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[42]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[65]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">ge</span><span class="p">,</span> <span class="n">me</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;g_e, m_e&#39;</span><span class="p">)</span>
@@ -16800,11 +16933,9 @@ $$m \overline{\psi} \psi$$<p>and $\textrm{dim}(m) = [M]$, it follows that a ferm
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[42]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[65]:</div>
 
 
 
@@ -16824,7 +16955,7 @@ $\displaystyle \left( g_{e}, \  m_{e}, \  g_{u}, \  m_{u}, \  g_{d}, \  m_{d}\ri
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[43]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[66]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">Hc</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">I</span><span class="o">*</span><span class="n">tau2</span><span class="o">*</span><span class="n">H</span>
@@ -16842,11 +16973,9 @@ $\displaystyle \left( g_{e}, \  m_{e}, \  g_{u}, \  m_{u}, \  g_{d}, \  m_{d}\ri
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[43]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[66]:</div>
 
 
 
@@ -16879,7 +17008,7 @@ $\displaystyle \left( \left[\begin{matrix}\overline{u}_L &amp; \overline{d}_L\en
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[44]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[67]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">Le</span> <span class="o">=</span> <span class="o">-</span><span class="n">ge</span><span class="o">*</span><span class="p">(</span><span class="n">Lbar</span><span class="o">*</span><span class="n">H</span><span class="o">*</span><span class="n">eR</span> <span class="o">+</span> <span class="n">ebarR</span><span class="o">*</span><span class="n">H</span><span class="o">.</span><span class="n">T</span><span class="o">*</span><span class="n">L</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">sm</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
@@ -16902,11 +17031,9 @@ $\displaystyle \left( \left[\begin{matrix}\overline{u}_L &amp; \overline{d}_L\en
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[44]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[67]:</div>
 
 
 
@@ -16938,7 +17065,7 @@ $\displaystyle - \frac{h m_{e} \left(\overline{e}_L e_{R} + \overline{e}_R e_{L}
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[45]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[68]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">Lq</span> <span class="o">=</span> <span class="o">-</span><span class="n">gd</span><span class="o">*</span><span class="p">(</span><span class="n">Qbar</span><span class="o">*</span><span class="n">H</span><span class="o">*</span><span class="n">dR</span>  <span class="o">+</span> <span class="n">dbarR</span><span class="o">*</span><span class="n">H</span><span class="o">.</span><span class="n">T</span><span class="o">*</span><span class="n">Q</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">sm</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> \
@@ -16965,11 +17092,9 @@ $\displaystyle - \frac{h m_{e} \left(\overline{e}_L e_{R} + \overline{e}_R e_{L}
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[45]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[68]:</div>
 
 
 
@@ -17004,7 +17129,7 @@ $\displaystyle - \frac{h m_{d} \left(\overline{d}_L d_{R} + \overline{d}_R d_{L}
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="The-Cabibbo-Hypothesis">The Cabibbo Hypothesis<a class="anchor-link" href="#The-Cabibbo-Hypothesis">&#182;</a></h3><p>So far we have considered only the 1st generation of particles. But three generations have been discovered so far and we have implicitly assumed that there is no "crosstalk" between them. There are, however, decays that  can be explained if "crosstalk" exists between generations. For example, the existence of decays such as $$\Lambda (d, u, s) \rightarrow p (d, u, u) \, \, e^- \, \, \bar{\nu}_e$$ are readily explained by supposing that the $W$ boson can convert an s-quark to a u-quark, that is, a 2nd generation quark to a 1st generation quark. Further clues are provided by the rates of decays such as
+<h3 id="The-Cabibbo-Hypothesis">The Cabibbo Hypothesis<a class="anchor-link" href="#The-Cabibbo-Hypothesis">&#182;</a></h3><p>So far we have considered only the 1st generation of particles. But three generations have been discovered so far and we have implicitly assumed that there is no &quot;crosstalk&quot; between them. There are, however, decays that  can be explained if &quot;crosstalk&quot; exists between generations. For example, the existence of decays such as $$\Lambda (d, u, s) \rightarrow p (d, u, u) \, \, e^- \, \, \bar{\nu}_e$$ are readily explained by supposing that the $W$ boson can convert an s-quark to a u-quark, that is, a 2nd generation quark to a 1st generation quark. Further clues are provided by the rates of decays such as
 \begin{align}
     \pi^+ &amp; \rightarrow \mu^+ \, \nu_\mu,\\
     K^+ &amp; \rightarrow \mu^+ \, \nu_\mu,
@@ -17015,7 +17140,7 @@ which are measured to be in the ratio
          {\Gamma(K^+ \rightarrow \mu^+ \, \nu_\mu)} &amp; \approx \frac{1}{20}.
 \end{align}
 The above decays can be described with the following Feynman diagrams,
-<img src="decays01.png" alt="decays">
+<img src="decays01.png" alt="decays" />
 in which the couplings $g_2\textrm{?}$ differ from $g_2$ by a factor chosen to match the measured ratio. The pictorial explanation of these decays, just like the decay of positronium (an electron-positron bound system), is that the particles comprising the $\pi^+$ annihilate, in this case to a W boson that subsequently decays leptonically. The observed ratio is readily explained if the W boson can interact with quarks of differing generations, but at a reduced rate compared with that of within-generation interactions. These observations and many others were explained by the Italian physicist Cabibbo who suggested that the lower component of the quark doublet, that is, the down quark field, be replaced with the combination
 $$d_L \rightarrow d_L^\prime = \cos\theta_C \, d_L + \sin\theta_C \, s_L,$$
 where $\theta_C$ is called the Cabibbo angle. With a suitable choice of the Cabibbo angle (about 12$^\textrm{o}$), the Cabibbo hypothesis worked well. 
@@ -17033,7 +17158,7 @@ predicts the existence of flavor-changing neutral currents (FCNC) at a rate in s
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[46]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[69]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">thetaC</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;theta_C&#39;</span><span class="p">)</span>
@@ -17057,11 +17182,9 @@ predicts the existence of flavor-changing neutral currents (FCNC) at a rate in s
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[46]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[69]:</div>
 
 
 
@@ -17086,7 +17209,7 @@ $\displaystyle \sin^{2}{\left(\theta_{C} \right)} \overline{s}_L \gamma^{\mu} s_
 <h3 id="The-GIM-Mechanism">The GIM Mechanism<a class="anchor-link" href="#The-GIM-Mechanism">&#182;</a></h3><p>In 1970, Sheldon Glashow, John
 Iliopoulos and Luciano
 Maiani (GIM) noted that if the strange quark were the lower component of another doublet, $$\begin{pmatrix} c_L \\ s_L \end{pmatrix},$$
-whose upper component would be a new quark field, dubbed "charm", and if one generalized Cabibbo's idea and assumed that the lower components of the two quark doublets were mixed as follows
+whose upper component would be a new quark field, dubbed &quot;charm&quot;, and if one generalized Cabibbo's idea and assumed that the lower components of the two quark doublets were mixed as follows
 $$\begin{pmatrix} d_L^\prime \\ s_L^\prime \end{pmatrix} = 
 \begin{pmatrix} \cos\theta_C &amp; \sin\theta_C \\
 -\sin\theta_C &amp; \cos\theta_C \end{pmatrix} \begin{pmatrix} d_L \\  s_L \end{pmatrix},  $$
@@ -17113,7 +17236,7 @@ would yield exact cancellation of the unwanted FCNC interactions at the price of
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[47]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[70]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">ybarL</span><span class="p">,</span> <span class="n">yL</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;\overline{s^\prime}_L, &#39;</span>\
@@ -17143,11 +17266,9 @@ would yield exact cancellation of the unwanted FCNC interactions at the price of
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[47]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[70]:</div>
 
 
 
@@ -17218,7 +17339,7 @@ which we use below to rewrite the vector boson Lagrangian in terms of the usual 
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[48]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[71]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">Wplusmu</span><span class="p">,</span> <span class="n">Wminusmu</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;W^+_\mu, W^-_\mu&quot;</span><span class="p">,</span> <span class="n">commutative</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -17258,11 +17379,9 @@ which we use below to rewrite the vector boson Lagrangian in terms of the usual 
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[48]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[71]:</div>
 
 
 
@@ -17300,9 +17419,7 @@ $\displaystyle \left( \left[\begin{matrix}W^{1}_{\mu}\\W^{2}_{\mu}\\W^{3}_{\mu}\
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
     <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[49]:</div>
 
@@ -17343,9 +17460,7 @@ $\displaystyle \left[\begin{matrix}W^{2}_{\mu} W^{3}_{\nu} - W^{3}_{\mu} W^{2}_{
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
     <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[50]:</div>
 
@@ -17456,9 +17571,7 @@ $\displaystyle \left( \left[\begin{matrix}- \frac{q \left(W^{2}_{\mu} W^{3}_{\nu
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
     <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[53]:</div>
 
@@ -17499,9 +17612,7 @@ $\displaystyle \left[\begin{matrix}- \frac{\sqrt{2} q A_{\mu} W^{+}_{\nu}}{2} + 
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
     <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[54]:</div>
 
@@ -17541,9 +17652,7 @@ $\displaystyle \left[\begin{matrix}- \frac{\sqrt{2} A_{\mu} W^+_{\nu} q}{2} + \f
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
     <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[55]:</div>
 
@@ -17583,9 +17692,7 @@ $\displaystyle - \sin{\left(\theta_{W} \right)} \partial_{\mu} Z_{\nu} + \sin{\l
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
     <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[56]:</div>
 
@@ -17626,9 +17733,7 @@ $\displaystyle \partial_{\mu}A_{\nu} \cos{\left(\theta_{W} \right)} - \partial_{
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
     
     <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[57]:</div>
 
